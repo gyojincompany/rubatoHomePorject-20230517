@@ -18,5 +18,8 @@ public interface IDao {
 	public List<RFboardDto> boardSearchContentDao(String keyword);//게시판 제목에서 검색
 	public List<RFboardDto> boardSearchWriterDao(String keyword);//게시판 제목에서 검색
 	
+	//댓글 기능
+	public int replyWriteDao(String rcontent, String rorinum);//댓글 입력
+	public void replyCountDao(String rorinum);//댓글이 달린 원글의 댓글 필드 값 +1
 		
 }

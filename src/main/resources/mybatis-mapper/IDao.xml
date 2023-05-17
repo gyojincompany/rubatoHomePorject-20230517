@@ -6,6 +6,8 @@
 	
 <mapper namespace="com.rubato.home.dao.IDao">
 	
+	
+	<!-- 게시판 관련 SQL -->
 	<insert id="boardWriteDao">
 		INSERT INTO 
 			rubafreeboard(bnum, bname, btitle, bcontent, bhit, buserid, breplycount, bfilecount)
@@ -29,6 +31,7 @@
 		UPDATE rubafreeboard SET bhit=bhit+1 WHERE bnum=#{param1}
 	</update>
 	
+	<!-- 게시판 검색 SQL -->
 	<select id="boardSearchTitleDao" resultType="com.rubato.home.dto.RFboardDto">
 		SELECT * FROM rubafreeboard WHERE btitle LIKE '%' || #{param1} || '%' ORDER BY bnum DESC
 	</select>
@@ -40,5 +43,17 @@
 	<select id="boardSearchWriterDao" resultType="com.rubato.home.dto.RFboardDto">
 		SELECT * FROM rubafreeboard WHERE bname LIKE '%' || #{param1} || '%' ORDER BY bnum DESC
 	</select>
+	
+	<!-- 댓글 관련 SQL -->
+	<insert id="replyWriteDao">
+		INSERT INTO 
+			rubareply(rnum, rcontent, rid, rorinum) 
+				VALUES (rfr_seq.nextval, #{param1}, '운영자', #{param2})
+	</insert>
+	
+	<update id="replyCountDao">
+		UPDATE rubafreeboard SET breplycount=breplycount+1 WHERE bnum=#{param1}
+	</update>
+	
 
 </mapper>	

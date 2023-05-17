@@ -83,5 +83,23 @@ public class HomeController {
 		
 		return "board_list";
 	}
+	
+	@RequestMapping(value = "/reply_write")
+	public String reply_write(HttpServletRequest request, Model model) {
+		
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.replyWriteDao(request.getParameter("rcontent"), request.getParameter("rorinum"));
+		
+		dao.replyCountDao(request.getParameter("rorinum"));//원글의 댓글 수를 1증가		
+				
+		return "redirect:board_list";
+	}
+	
+	
+	
+	
+	
 
 }

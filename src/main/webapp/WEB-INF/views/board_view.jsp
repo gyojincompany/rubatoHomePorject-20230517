@@ -73,11 +73,16 @@
         <p id="view_content">
           ${boardDto.bcontent }
         </p>
+        
+        
+        <form action="reply_write">
+        <input type="hidden" name="rorinum" value="${boardDto.bnum }">
         <div id="comment_box">
           <img id="title_comment" src="/resources/img/title_comment.gif">
-          <textarea></textarea>
-          <img id="ok_ripple" src="/resources/img/ok_ripple.gif">
+          <textarea name="rcontent"></textarea>
+          <input type="image" src="/resources/img/ok_ripple.gif" id="ok_ripple">          
         </div>
+        </form>
         <div id="buttons">
           <a href="#"><img src="/resources/img/delete.png"></a>
           <a href="board_list"><img src="/resources/img/list.png"></a>

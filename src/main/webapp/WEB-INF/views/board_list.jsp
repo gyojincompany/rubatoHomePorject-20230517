@@ -98,7 +98,11 @@
           <tr>
             <td class="col1">${dto.bnum }</td>
             <td class="col2">
-              <a href="board_view?bnum=${dto.bnum }">${dto.btitle }</a>
+              <a href="board_view?bnum=${dto.bnum }">${dto.btitle }</a>&nbsp;&nbsp;&nbsp;
+              <c:if test="${dto.breplycount != 0}">
+              <span style="color:#999999;font-size: 9px;">[${dto.breplycount }]</span>
+              </c:if>
+              
             </td>
             <td class="col3">${dto.bname }</td>
             <td class="col4"><c:out value="${fn:substring(dto.bdate,0,10) }"></c:out></td>
