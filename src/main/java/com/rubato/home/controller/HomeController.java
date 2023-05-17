@@ -61,5 +61,27 @@ public class HomeController {
 		
 		return "redirect:board_list";
 	}
+	
+	@RequestMapping(value = "/search_list")
+	public String search_list(HttpServletRequest request, Model model) {
+		
+		String searchOption = request.getParameter("searchOption");
+		String keyword = request.getParameter("keyword");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		if(searchOption.equals("title" )) {
+			model.addAttribute("list", dao.boardSearchTitleDao(keyword));
+			model.addAttribute("totalCount", dao.boardSearchTitleDao(keyword).size());
+		} else if(searchOption.equals("content")) {
+			model.addAttribute("list", dao.boardSearchContentDao(keyword));
+			model.addAttribute("totalCount", dao.boardSearchContentDao(keyword).size());
+		} else {
+			model.addAttribute("list", dao.boardSearchWriterDao(keyword));
+			model.addAttribute("totalCount", dao.boardSearchWriterDao(keyword).size());
+		}
+		
+		return "board_list";
+	}
 
 }
