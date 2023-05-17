@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.rubato.home.dao.IDao;
@@ -21,7 +22,12 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/board_list")
-	public String board_list() {
+	public String board_list(Model model) {
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		model.addAttribute("list", dao.boardListDao());
+		model.addAttribute("totalCount", dao.boardTotalCountDao());		
+		
 		return "board_list";
 	}
 	
@@ -31,7 +37,14 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/board_view")
-	public String board_view() {
+	public String board_view(HttpServletRequest request, Model model) {
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.boardHitDao(request.getParameter("bnum"));//조회수 증가
+		
+		model.addAttribute("boardDto", dao.boardContentViewDao(request.getParameter("bnum")));
+		
 		return "board_view";
 	}
 	
