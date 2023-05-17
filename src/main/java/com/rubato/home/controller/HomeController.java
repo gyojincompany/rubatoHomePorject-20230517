@@ -45,6 +45,8 @@ public class HomeController {
 		
 		model.addAttribute("boardDto", dao.boardContentViewDao(request.getParameter("bnum")));
 		
+		model.addAttribute("replyList", dao.replyListDao(request.getParameter("bnum")));
+		
 		return "board_view";
 	}
 	
@@ -90,11 +92,15 @@ public class HomeController {
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
-		dao.replyWriteDao(request.getParameter("rcontent"), request.getParameter("rorinum"));
+		dao.replyWriteDao(request.getParameter("rcontent"), request.getParameter("rorinum"));		
 		
 		dao.replyCountDao(request.getParameter("rorinum"));//원글의 댓글 수를 1증가		
+		
+		model.addAttribute("boardDto", dao.boardContentViewDao(request.getParameter("rorinum")));
+		
+		model.addAttribute("replyList", dao.replyListDao(request.getParameter("rorinum")));
 				
-		return "redirect:board_list";
+		return "board_view";
 	}
 	
 	
