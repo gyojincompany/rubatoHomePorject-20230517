@@ -61,6 +61,8 @@ public class HomeController {
 		
 		dao.boardWriteDao(bname, btitle, bcontent, "정회원", 0);
 		
+		
+		
 		return "redirect:board_list";
 	}
 	
@@ -88,8 +90,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/reply_write")
 	public String reply_write(HttpServletRequest request, Model model) {
-		
-		
+				
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
 		dao.replyWriteDao(request.getParameter("rcontent"), request.getParameter("rorinum"));		
@@ -103,9 +104,31 @@ public class HomeController {
 		return "board_view";
 	}
 	
+	@RequestMapping(value = "/board_delete")
+	public String board_delete(HttpServletRequest request) {
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.boardDeleteDao(request.getParameter("bnum"));
+		
+		return "redirect:board_list";
+	}
 	
-	
-	
+	@RequestMapping(value = "/replyDelete")
+	public String repply_delete(HttpServletRequest request, Model model) {		
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.replyDeleteDao(request.getParameter("rnum"));//댓글 삭제
+		
+		dao.replyCountMinusDao(request.getParameter("rorinum"));//댓글 개수 1개 삭제
+		
+		model.addAttribute("boardDto", dao.boardContentViewDao(request.getParameter("rorinum")));
+		
+		model.addAttribute("replyList", dao.replyListDao(request.getParameter("rorinum")));
+		
+		return "board_view";
+	}
 	
 
 }

@@ -44,6 +44,10 @@
 		SELECT * FROM rubafreeboard WHERE bname LIKE '%' || #{param1} || '%' ORDER BY bnum DESC
 	</select>
 	
+	<delete id="boardDeleteDao">
+		DELETE FROM rubafreeboard WHERE bnum=#{param1}
+	</delete>
+	
 	<!-- 댓글 관련 SQL -->
 	<insert id="replyWriteDao">
 		INSERT INTO 
@@ -59,5 +63,12 @@
 		SELECT * FROM rubareply WHERE rorinum=#{param1} ORDER BY rnum ASC
 	</select>
 	
+	<delete id="replyDeleteDao">
+		DELETE FROM rubareply WHERE rnum=#{param1}
+	</delete>
+	
+	<update id="replyCountMinusDao">
+		UPDATE rubafreeboard SET breplycount=breplycount-1 WHERE bnum=#{param1}
+	</update>
 
 </mapper>	
