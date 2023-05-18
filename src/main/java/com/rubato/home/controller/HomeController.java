@@ -56,6 +56,8 @@ public class HomeController {
 		
 		model.addAttribute("replyList", dao.replyListDao(request.getParameter("bnum")));
 		
+		model.addAttribute("fileDto", dao.getFileInfoDao(request.getParameter("bnum")));
+		
 		return "board_view";
 	}
 	
