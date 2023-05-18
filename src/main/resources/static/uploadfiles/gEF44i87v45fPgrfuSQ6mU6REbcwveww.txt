@@ -1,0 +1,7 @@
+create table membertbl(
+ memberId char(8) not null,
+ memberName char(5) not null,
+ memberAddress char(20) null,
+ primary key(memberId));
+
+insert into membertbl ('Dang', '당탕이', '경기도 부천시 중동');

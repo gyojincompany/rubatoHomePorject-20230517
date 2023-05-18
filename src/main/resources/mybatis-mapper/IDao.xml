@@ -70,5 +70,12 @@
 	<update id="replyCountMinusDao">
 		UPDATE rubafreeboard SET breplycount=breplycount-1 WHERE bnum=#{param1}
 	</update>
+	
+	<!-- file 업로드 관련 SQL -->
+	<insert id="fileInfoCreateDao">
+		INSERT INTO
+			rubafiles(filenum, forinum, fileoriname, filename, fileextension, fileurl)
+				VALUES (rffile_seq.nextval, #{param1}, #{param2}, #{param3}, #{param4}, #{param5})
+	</insert>
 
 </mapper>	

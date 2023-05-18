@@ -26,5 +26,8 @@ public interface IDao {
 	public List<RReplyDto> replyListDao(String rorinum);//해당 원글에 달린 댓글의 리스트 가져오기
 	public void replyDeleteDao(String rnum);//댓글 삭제
 	public void replyCountMinusDao(String rorinum);//댓글이 달린 원글의 댓글 필드 값 -1
+	
+	//파일 첨부 관련 기능
+	public void fileInfoCreateDao(int forinum, String fileoriname, String filename, String fileextension, String fileurl);
 		
 }

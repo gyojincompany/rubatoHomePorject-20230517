@@ -1,14 +1,23 @@
 package com.rubato.home.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rubato.home.dao.IDao;
+import com.rubato.home.dto.RFboardDto;
 
 @Controller
 public class HomeController {
@@ -51,7 +60,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/board_writeOk")
-	public String board_writeOk(HttpServletRequest request) {
+	public String board_writeOk(HttpServletRequest request, @RequestPart MultipartFile files) throws IllegalStateException, IOException {
 		
 		String bname = request.getParameter("bname");
 		String btitle = request.getParameter("btitle");
@@ -59,8 +68,36 @@ public class HomeController {
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
-		dao.boardWriteDao(bname, btitle, bcontent, "정회원", 0);
-		
+		if(files.isEmpty()) {//true면 파일이 첨부가 안됨		
+			dao.boardWriteDao(bname, btitle, bcontent, "정회원", 0);//파일 첨부 없이 글만 입력
+		} else {//파일이 첨부된 경우
+			dao.boardWriteDao(bname, btitle, bcontent, "정회원", 1);//파일이 첨부된 상태로 글을 쓴 경우
+			List<RFboardDto> boardList = dao.boardListDao();//모든 글 목록 가져오기
+			RFboardDto boardDto = boardList.get(0);//방금 쓴 글
+			int forinum = boardDto.getBnum();//방금 쓴글의 번호(파일이 첨부된 글의 번호)
+			
+			//파일첨부관련 작업
+			String fileoriname = files.getOriginalFilename();//첨부된 파일의 원래 이름
+			//System.out.println(fileoriname);
+			String fileextension = FilenameUtils.getExtension(fileoriname).toLowerCase();
+			//System.out.println(fileextension);
+			//파일의 확장자 가져온 후에 소문자로 변경
+			File destinationFile;
+			String destinationFileName;//실제 서버에 저장된 파일의 변경된 이름이 저장될 변수
+			String fileurl="E:/springboot_workspace/rubatoHomeProject-20230517/src/main/resources/static/uploadfiles/";
+			//첨부된 파일이 저장될 서버의 실제 폴더의 경로
+			
+			do {
+			destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + fileextension;
+			//알파벳대소문자+숫자로 이루어진 랜덤 32글자의 문자열 이름으로된 파일이름 생성->서버에 이 이름으로 저장
+			destinationFile = new File(fileurl+destinationFileName);
+			} while(destinationFile.exists());//같은 파일이름이 혹시 존재하는지 확인
+			
+			destinationFile.getParentFile().mkdir();
+			files.transferTo(destinationFile);//업로드된 첨부된 파일이 지정한 폴더로 이동 완료! 
+			
+			dao.fileInfoCreateDao(forinum, fileoriname, destinationFileName, fileextension, fileurl);
+		}
 		
 		
 		return "redirect:board_list";
